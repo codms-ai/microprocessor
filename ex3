@@ -1,0 +1,39 @@
+#include <avr/io.h>         
+#include <util/delay.h>     
+
+void all_off(void){
+  PORTE &= ~0x38;
+  PORTG &= ~0x20;
+}
+void led_on(uint8_t n) {
+  all_off();
+  switch(n){
+    case 0: PORTE |= 0x10; break;
+    case 1: PORTE |= 0x20; break;
+    case 2: PORTG |= 0x20; break;
+    case 3: PORTE |= 0x08; break;
+  }
+}
+int main(void) {
+  DDRE |= 0x08; //D5
+  DDRE |= 0x10; //D2
+  DDRE |= 0x20; //D3
+  DDRG |= 0x20; //D4
+  DDRJ &= ~0x02; //D14
+  uint8_t n=0;
+  int8_t k=1;
+  uint8_t state_pre=0, state_cur;
+
+  while(1) {
+    state_cur = (PINJ>>1) & 0x02;
+    if (state_cur==1 && state_pre==0) {
+      k=-k;
+      _delay_ms(50);
+    }
+    state_pre= state_cur;
+    led_on(n);
+    _delay_ms(100);
+    n= (n+k +4) %4; //+4가 없으면 역방향시 오류
+  }
+  return 0;
+}

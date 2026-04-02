@@ -1,0 +1,31 @@
+#define F_CPU 16000000L     
+#include <avr/io.h>         
+#include <util/delay.h>     
+
+void all_off(void){
+  PORTE &= ~0x38;
+  PORTG &= ~0x20;
+}
+void led_on(uint8_t n) {
+  all_off();
+  switch(n){
+    case 0: PORTE |= 0x10; break;
+    case 1: PORTE |= 0x20; break;
+    case 2: PORTG |= 0x20; break;
+    case 3: PORTE |= 0x08; break;
+  }
+}
+int main(void) {
+  DDRE |= 0x08; //D5
+  DDRE |= 0x10; //D2
+  DDRE |= 0x20; //D3
+  DDRG |= 0x20; //D4
+
+  while(1) {
+    for(uint8_t i=0; i<4; i++){
+      led_on(i);
+      _delay_ms(1000);
+    }
+  }
+}
+  
