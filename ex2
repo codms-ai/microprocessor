@@ -20,12 +20,12 @@ int main(void) {
   DDRE |= 0x20; //D3
   DDRG |= 0x20; //D4
   DDRJ &= ~0x02; //D14
-  unit8_t n=0;
+  uint8_t n=0;
   uint8_t state_pre=0; state_cur;
 
   led_on(0);
   while(1) {
-    state_cur = PINJ & 0x02;
+    state_cur = (PINJ>>1) & 0x02;
     if (state_cur==1 && state_pre==0) {
       _delay_ms(5);
       n= (n+1)%4
